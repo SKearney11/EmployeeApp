@@ -45,6 +45,8 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         TableView.dataSource = self
         TableView.delegate = self
         dispatchGroup.notify(queue: .main){
+            self.filterData()
+            //print(employeeList)
             self.reloadData()
         }
     }
@@ -84,6 +86,12 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         print("REloading")
         self.TableView.reloadData()
         ActivityIndicator.isHidden = true
+    }
+    
+    func filterData(){
+        employeeList.removeAll(where: {Int($0.employee_age) ?? 0 < 15})
+        employeeList.removeAll(where: {Int($0.employee_age) ?? 0 > 74})
+        employeeList.removeAll(where: {Int($0.employee_salary) ?? 0 < 100})
     }
 }
 
