@@ -30,6 +30,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         let cell = tableView.dequeueReusableCell(withIdentifier: "EmployeeCell", for: indexPath)
         
         cell.textLabel!.text = employeeList[indexPath.row].employee_name
+        cell.accessoryType = UITableViewCell.AccessoryType.disclosureIndicator
         return cell
     }
     
@@ -92,6 +93,20 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         employeeList.removeAll(where: {Int($0.employee_age) ?? 0 < 15})
         employeeList.removeAll(where: {Int($0.employee_age) ?? 0 > 74})
         employeeList.removeAll(where: {Int($0.employee_salary) ?? 0 < 100})
+    }
+    
+    var selectedEmployee: Employee?
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        selectedEmployee = employeeList[indexPath.row]
+        performSegue(withIdentifier: "ShowDetailView", sender: nil)
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "ShowDetailView"{
+            let detailView = segue.destination as! DetailViewController
+            detailView.employee = selectedEmployee
+        }
     }
 }
 
