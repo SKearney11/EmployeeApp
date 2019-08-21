@@ -20,6 +20,8 @@ let dispatchGroup = DispatchGroup()
 
 class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
+    @IBOutlet weak var ActivityIndicator: UIActivityIndicatorView!
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return employeeList.count
     }
@@ -37,6 +39,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        ActivityIndicator.isHidden = false
         dispatchGroup.enter()
         fetchEmployeeData()
         TableView.dataSource = self
@@ -80,7 +83,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     func reloadData(){
         print("REloading")
         self.TableView.reloadData()
-        print(employeeList)
+        ActivityIndicator.isHidden = true
     }
 }
 
