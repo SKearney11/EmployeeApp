@@ -128,6 +128,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             }else{
                 employeeList.remove(at: indexPath.row)
             }
+            actionPerformed(true)
             self.reloadData()
         }
         return UISwipeActionsConfiguration(actions: [delete])
