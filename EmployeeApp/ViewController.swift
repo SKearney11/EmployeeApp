@@ -116,6 +116,23 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         return cell
     }
     
+    //Swipe to delete
+    //Deleting from main view (no search) is fine
+    //Deleting from search results deletes by ID, theres proabably a better way to do this
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        let delete = UIContextualAction(style: .destructive, title: "Delete") { (contextualActoin, view, actionPerformed:(Bool)-> Void) in
+            if isSearching{
+                let employeeRemove = searchResults[indexPath.row]
+                searchResults.remove(at: indexPath.row)
+                employeeList.removeAll(where: {$0.id == employeeRemove.id})
+            }else{
+                employeeList.remove(at: indexPath.row)
+            }
+            self.reloadData()
+        }
+        return UISwipeActionsConfiguration(actions: [delete])
+    }
+    
     //Sends the selected employee to DetailViewController.swift
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "ShowDetailView"{
