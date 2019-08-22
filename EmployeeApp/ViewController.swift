@@ -23,28 +23,6 @@ let dispatchGroup = DispatchGroup()
 class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     @IBOutlet weak var ActivityIndicator: UIActivityIndicatorView!
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if isSearching{
-            return searchResults.count
-        }else{
-            return employeeList.count
-        }
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "EmployeeCell", for: indexPath)
-        if isSearching{
-            cell.textLabel!.text = searchResults[indexPath.row].employee_name
-        } else{
-            cell.textLabel!.text = employeeList[indexPath.row].employee_name
-        }
-        
-        cell.accessoryType = UITableViewCell.AccessoryType.disclosureIndicator
-        return cell
-    }
-    
-
     @IBOutlet weak var SearchBar: UISearchBar!
     @IBOutlet weak var TableView: UITableView!
     
@@ -58,28 +36,26 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         TableView.delegate = self
         dispatchGroup.notify(queue: .main){
             self.filterData()
-            //print(employeeList)
             self.reloadData()
         }
     }
     
+    //Gets data from API and stores it in employeeList array
     func fetchEmployeeData(){
         let urlString = "http://dummy.restapiexample.com/api/v1/employees"
         guard let url = URL(string: urlString) else{return}
        
         URLSession.shared.dataTask(with: url){(data, response, error) in
-            
-            
             if let err = error{
-                print(err)
+                print("Error: \(err)")
                 return
             }
             guard response != nil else{
-                //no response
+                print("Error: No response")
                 return
             }
             guard let data = data else{
-                //empty data
+                print("Error: No data retrieved")
                 return
             }
             do{
@@ -88,18 +64,19 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                 employeeList = employees
                 dispatchGroup.leave()
             } catch{
-                print(error)
+                print("Error: Error parsing json")
             }
         }.resume()
-        
     }
     
+    //Refreshes tableview and dismisses loading indicator
     func reloadData(){
-        print("REloading")
+        print("Reloading")
         self.TableView.reloadData()
         ActivityIndicator.isHidden = true
     }
     
+    //Filters out employees from employeeList array
     func filterData(){
         employeeList.removeAll(where: {Int($0.employee_age) ?? 0 < 15})
         employeeList.removeAll(where: {Int($0.employee_age) ?? 0 > 74})
@@ -107,17 +84,39 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     }
     
     var selectedEmployee: Employee?
-    
+    //Records users selection to pass to segue
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if isSearching{
             selectedEmployee = searchResults[indexPath.row]
         }else{
             selectedEmployee = employeeList[indexPath.row]
         }
-        
         performSegue(withIdentifier: "ShowDetailView", sender: nil)
     }
     
+    //Informs tableview of how many cells are needed
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if isSearching{
+            return searchResults.count
+        }else{
+            return employeeList.count
+        }
+    }
+    
+    //Provides tableview with information to include in cell
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "EmployeeCell", for: indexPath)
+        if isSearching{
+            cell.textLabel!.text = searchResults[indexPath.row].employee_name
+        } else{
+            cell.textLabel!.text = employeeList[indexPath.row].employee_name
+        }
+        
+        cell.accessoryType = UITableViewCell.AccessoryType.disclosureIndicator
+        return cell
+    }
+    
+    //Sends the selected employee to DetailViewController.swift
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "ShowDetailView"{
             let detailView = segue.destination as! DetailViewController
@@ -126,11 +125,10 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     }
 }
 
-
+//Set up search bar
 extension ViewController: UISearchBarDelegate{
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         searchResults = employeeList.filter{$0.employee_name.prefix(searchText.count) == searchText}
-        print(searchResults)
         isSearching = true
         reloadData()
     }
