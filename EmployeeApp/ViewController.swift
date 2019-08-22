@@ -16,6 +16,8 @@ struct Employee: Decodable{
 }
 
 var employeeList = [Employee]()
+var searchResults = [Employee]()
+var isSearching = false
 let dispatchGroup = DispatchGroup()
 
 class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
@@ -23,18 +25,27 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     @IBOutlet weak var ActivityIndicator: UIActivityIndicatorView!
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return employeeList.count
+        if isSearching{
+            return searchResults.count
+        }else{
+            return employeeList.count
+        }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "EmployeeCell", for: indexPath)
+        if isSearching{
+            cell.textLabel!.text = searchResults[indexPath.row].employee_name
+        } else{
+            cell.textLabel!.text = employeeList[indexPath.row].employee_name
+        }
         
-        cell.textLabel!.text = employeeList[indexPath.row].employee_name
         cell.accessoryType = UITableViewCell.AccessoryType.disclosureIndicator
         return cell
     }
     
 
+    @IBOutlet weak var SearchBar: UISearchBar!
     @IBOutlet weak var TableView: UITableView!
     
     
@@ -98,7 +109,12 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     var selectedEmployee: Employee?
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        selectedEmployee = employeeList[indexPath.row]
+        if isSearching{
+            selectedEmployee = searchResults[indexPath.row]
+        }else{
+            selectedEmployee = employeeList[indexPath.row]
+        }
+        
         performSegue(withIdentifier: "ShowDetailView", sender: nil)
     }
     
@@ -110,3 +126,12 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     }
 }
 
+
+extension ViewController: UISearchBarDelegate{
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        searchResults = employeeList.filter{$0.employee_name.prefix(searchText.count) == searchText}
+        print(searchResults)
+        isSearching = true
+        reloadData()
+    }
+}

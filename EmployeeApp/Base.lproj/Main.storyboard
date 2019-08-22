@@ -18,11 +18,21 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <searchBar contentMode="redraw" translatesAutoresizingMaskIntoConstraints="NO" id="1lr-BH-FZL">
+                                <rect key="frame" x="0.0" y="88" width="414" height="44"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="44" id="Cp0-dg-cKQ"/>
+                                </constraints>
+                                <textInputTraits key="textInputTraits"/>
+                                <connections>
+                                    <outlet property="delegate" destination="BYZ-38-t0r" id="Ww5-LZ-QBR"/>
+                                </connections>
+                            </searchBar>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="HT2-Fw-6Ud">
-                                <rect key="frame" x="20" y="44" width="374" height="838"/>
+                                <rect key="frame" x="20" y="132" width="374" height="750"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="EmployeeCell" id="cSy-cI-50I">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="EmployeeCell" id="cSy-cI-50I">
                                         <rect key="frame" x="0.0" y="28" width="374" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="cSy-cI-50I" id="mpF-F5-m91">
@@ -31,6 +41,9 @@
                                         </tableViewCellContentView>
                                     </tableViewCell>
                                 </prototypes>
+                                <connections>
+                                    <outlet property="delegate" destination="BYZ-38-t0r" id="1Vi-M7-HHV"/>
+                                </connections>
                             </tableView>
                             <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="26b-T6-23Y">
                                 <rect key="frame" x="189" y="320" width="37" height="37"/>
@@ -40,9 +53,12 @@
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
-                            <constraint firstItem="HT2-Fw-6Ud" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" constant="44" id="EBx-am-dZG"/>
+                            <constraint firstItem="1lr-BH-FZL" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="0So-2m-Mfx"/>
+                            <constraint firstItem="1lr-BH-FZL" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="EL5-s8-BmK"/>
                             <constraint firstItem="HT2-Fw-6Ud" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="JLL-6d-lOk"/>
                             <constraint firstItem="HT2-Fw-6Ud" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" constant="20" id="K4m-TM-DO4"/>
+                            <constraint firstItem="HT2-Fw-6Ud" firstAttribute="top" secondItem="1lr-BH-FZL" secondAttribute="bottom" id="M2S-dM-sUx"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="1lr-BH-FZL" secondAttribute="trailing" id="RUR-Tn-CRF"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="HT2-Fw-6Ud" secondAttribute="trailing" constant="20" id="bOi-D6-sv9"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
@@ -50,6 +66,7 @@
                     <navigationItem key="navigationItem" id="Xlc-el-6mO"/>
                     <connections>
                         <outlet property="ActivityIndicator" destination="26b-T6-23Y" id="qlU-bL-xek"/>
+                        <outlet property="SearchBar" destination="1lr-BH-FZL" id="XDa-ci-tgr"/>
                         <outlet property="TableView" destination="HT2-Fw-6Ud" id="4i1-Ah-HXX"/>
                         <segue destination="3Nl-WQ-bvp" kind="show" identifier="ShowDetailView" id="lNm-Cp-hn7"/>
                     </connections>
